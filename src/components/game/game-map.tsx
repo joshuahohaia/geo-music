@@ -1,0 +1,186 @@
+"use client";
+
+import { useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
+import { Icon, LatLngBounds } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+import "leaflet-defaulticon-compatibility";
+
+interface GameMapProps {
+  onLocationSelect: (lat: number, lng: number) => void;
+  selectedLocation: { lat: number; lng: number } | null;
+  revealMode?: boolean;
+  actualLocation?: { lat: number; lng: number };
+  disabled?: boolean;
+  resetKey?: number; // Used to reset map view between rounds
+}
+
+// World bounds to prevent infinite scrolling
+const WORLD_BOUNDS = new LatLngBounds(
+  [-85, -180], // Southwest corner
+  [85, 180]    // Northeast corner
+);
+
+// Custom marker icons
+const guessIcon = new Icon({
+  iconUrl:
+    "data:image/svg+xml;base64," +
+    btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 32" width="24" height="32">
+      <path fill="#E84855" d="M12 0C5.4 0 0 5.4 0 12c0 9 12 20 12 20s12-11 12-20c0-6.6-5.4-12-12-12z"/>
+      <circle fill="#fff" cx="12" cy="12" r="5"/>
+    </svg>
+  `),
+  iconSize: [24, 32],
+  iconAnchor: [12, 32],
+  popupAnchor: [0, -32],
+});
+
+const actualIcon = new Icon({
+  iconUrl:
+    "data:image/svg+xml;base64," +
+    btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 32" width="24" height="32">
+      <path fill="#22C55E" d="M12 0C5.4 0 0 5.4 0 12c0 9 12 20 12 20s12-11 12-20c0-6.6-5.4-12-12-12z"/>
+      <circle fill="#fff" cx="12" cy="12" r="5"/>
+    </svg>
+  `),
+  iconSize: [24, 32],
+  iconAnchor: [12, 32],
+  popupAnchor: [0, -32],
+});
+
+// Map click handler component
+function MapClickHandler({
+  onLocationSelect,
+  disabled,
+}: {
+  onLocationSelect: (lat: number, lng: number) => void;
+  disabled?: boolean;
+}) {
+  useMapEvents({
+    click: (e) => {
+      if (disabled) return;
+      onLocationSelect(e.latlng.lat, e.latlng.lng);
+    },
+  });
+  return null;
+}
+
+// Auto-fit bounds component for reveal mode
+function FitBounds({
+  guessLocation,
+  actualLocation,
+}: {
+  guessLocation: { lat: number; lng: number };
+  actualLocation: { lat: number; lng: number };
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    const bounds = new LatLngBounds(
+      [guessLocation.lat, guessLocation.lng],
+      [actualLocation.lat, actualLocation.lng]
+    );
+    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 10 });
+  }, [map, guessLocation, actualLocation]);
+
+  return null;
+}
+
+// Reset map view between rounds
+function MapReset({ resetKey }: { resetKey?: number }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (resetKey !== undefined) {
+      map.setView([20, 0], 2);
+    }
+  }, [map, resetKey]);
+
+  return null;
+}
+
+export function GameMap({
+  onLocationSelect,
+  selectedLocation,
+  revealMode = false,
+  actualLocation,
+  disabled = false,
+  resetKey,
+}: GameMapProps) {
+  const defaultCenter: [number, number] = [20, 0];
+  const defaultZoom = 2;
+
+  return (
+    <MapContainer
+      center={defaultCenter}
+      zoom={defaultZoom}
+      scrollWheelZoom={true}
+      style={{ height: "100%", width: "100%" }}
+      className="rounded-3xl overflow-hidden"
+      maxBounds={WORLD_BOUNDS}
+      maxBoundsViscosity={1.0}
+      minZoom={2}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        noWrap={true}
+      />
+
+      <MapReset resetKey={resetKey} />
+
+      <MapClickHandler
+        onLocationSelect={onLocationSelect}
+        disabled={disabled || revealMode}
+      />
+
+      {/* User's guess marker */}
+      {selectedLocation && (
+        <Marker
+          position={[selectedLocation.lat, selectedLocation.lng]}
+          icon={guessIcon}
+        />
+      )}
+
+      {/* Actual location marker (reveal mode) */}
+      {revealMode && actualLocation && (
+        <>
+          <Marker
+            position={[actualLocation.lat, actualLocation.lng]}
+            icon={actualIcon}
+          />
+
+          {/* Polyline connecting guess to actual */}
+          {selectedLocation && (
+            <>
+              <Polyline
+                positions={[
+                  [selectedLocation.lat, selectedLocation.lng],
+                  [actualLocation.lat, actualLocation.lng],
+                ]}
+                color="#E84855"
+                weight={3}
+                dashArray="10, 10"
+                opacity={0.8}
+              />
+              <FitBounds
+                guessLocation={selectedLocation}
+                actualLocation={actualLocation}
+              />
+            </>
+          )}
+        </>
+      )}
+    </MapContainer>
+  );
+}
