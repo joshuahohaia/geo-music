@@ -29,10 +29,22 @@ export function useGame() {
   );
 
   const setGuess = useCallback(
-    (latitude: number, longitude: number) => {
-      dispatch({ type: "SET_GUESS", payload: { latitude, longitude } });
+    (latitude: number, longitude: number, year?: number) => {
+      dispatch({ type: "SET_GUESS", payload: { latitude, longitude, year } });
     },
     [dispatch]
+  );
+
+  const setYearGuess = useCallback(
+    (year: number) => {
+      if (state.currentGuess) {
+        dispatch({
+          type: "SET_GUESS",
+          payload: { ...state.currentGuess, year },
+        });
+      }
+    },
+    [state.currentGuess, dispatch]
   );
 
   const clearGuess = useCallback(() => {
@@ -67,6 +79,7 @@ export function useGame() {
     // Actions
     startGame,
     setGuess,
+    setYearGuess,
     clearGuess,
     submitGuess,
     nextRound,

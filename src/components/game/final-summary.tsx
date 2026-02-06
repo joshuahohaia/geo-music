@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, RotateCcw, MapPin, Music } from "lucide-react";
+import { Trophy, RotateCcw, MapPin, Music, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { RoundResult } from "@/types/game";
@@ -18,7 +18,10 @@ export function FinalSummary({
   totalScore,
   onPlayAgain,
 }: FinalSummaryProps) {
-  const maxPossibleScore = results.length * SCORING_CONFIG.MAX_SCORE;
+  const maxLocationScore = results.length * SCORING_CONFIG.MAX_SCORE;
+  const maxYearScore = results.length * SCORING_CONFIG.YEAR_MAX_SCORE;
+  const maxPossibleScore = maxLocationScore + maxYearScore;
+  const totalYearBonus = results.reduce((sum, r) => sum + r.yearScore, 0);
   const percentage = Math.round((totalScore / maxPossibleScore) * 100);
 
   const getOverallTier = () => {
@@ -68,6 +71,14 @@ export function FinalSummary({
               <div className="text-muted-foreground mt-2">
                 out of {maxPossibleScore.toLocaleString()} points ({percentage}%)
               </div>
+              {totalYearBonus > 0 && (
+                <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 bg-pistachio/20 rounded-full text-sm">
+                  <Calendar className="h-4 w-4 text-pistachio" />
+                  <span className="text-navy font-medium">
+                    +{totalYearBonus.toLocaleString()} year bonus
+                  </span>
+                </div>
+              )}
             </motion.div>
           </div>
 
@@ -103,11 +114,19 @@ export function FinalSummary({
                     </div>
                     <div className="text-right">
                       <div className={`font-bold ${color}`}>
-                        {result.score.toLocaleString()}
+                        {result.totalScore.toLocaleString()}
                       </div>
-                      <div className="text-xs text-muted-foreground flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {formatDistance(result.distance)}
+                      <div className="text-xs text-muted-foreground flex items-center gap-2">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          {formatDistance(result.distance)}
+                        </span>
+                        {result.yearScore > 0 && (
+                          <span className="flex items-center gap-1 text-pistachio">
+                            <Calendar className="h-3 w-3" />
+                            +{result.yearScore}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </motion.div>

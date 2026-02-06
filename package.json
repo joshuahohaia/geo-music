@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node -e \"try{require('fs').unlinkSync('.next/dev/lock')}catch{}\" && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "refresh": "node scripts/refresh-previews.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

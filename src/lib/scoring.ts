@@ -5,6 +5,7 @@ export const SCORING_CONFIG = {
   MAX_SCORE: 5000,
   PERFECT_DISTANCE_KM: 0.15, // 150 meters for max score
   DECAY_RATE: 2000, // Controls how fast score drops with distance
+  YEAR_MAX_SCORE: 1000, // Max bonus for correct year
 };
 
 /**
@@ -68,6 +69,27 @@ export function formatDistance(distanceKm: number): string {
     return `${distanceKm.toFixed(1)} km`;
   }
   return `${Math.round(distanceKm).toLocaleString()} km`;
+}
+
+/**
+ * Calculate year bonus score
+ * - Exact year: 1000 points
+ * - 1 year off: 750 points
+ * - 2 years off: 500 points
+ * - 3 years off: 250 points
+ * - 4+ years off: 0 points
+ */
+export function calculateYearScore(guessedYear: number | undefined, actualYear: number | undefined): number {
+  if (!guessedYear || !actualYear) return 0;
+
+  const difference = Math.abs(guessedYear - actualYear);
+  const { YEAR_MAX_SCORE } = SCORING_CONFIG;
+
+  if (difference === 0) return YEAR_MAX_SCORE;
+  if (difference === 1) return Math.round(YEAR_MAX_SCORE * 0.75);
+  if (difference === 2) return Math.round(YEAR_MAX_SCORE * 0.5);
+  if (difference === 3) return Math.round(YEAR_MAX_SCORE * 0.25);
+  return 0;
 }
 
 /**

@@ -18,13 +18,16 @@ export interface Song {
 export interface Guess {
   latitude: number;
   longitude: number;
+  year?: number;
 }
 
 export interface RoundResult {
   song: Song;
   guess: Guess;
   distance: number; // in kilometers
-  score: number; // 0-5000
+  score: number; // 0-5000 for location
+  yearScore: number; // 0-1000 bonus for year
+  totalScore: number; // combined score
 }
 
 export type GameStatus =

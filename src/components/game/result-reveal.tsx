@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, ArrowRight, Trophy } from "lucide-react";
+import { MapPin, ArrowRight, Trophy, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import type { RoundResult } from "@/types/game";
@@ -25,11 +25,12 @@ export function ResultReveal({
 
   useEffect(() => {
     // Show toast notification for score
-    toast.success(`+${result.score.toLocaleString()} points!`, {
+    const yearBonus = result.yearScore > 0 ? ` (+${result.yearScore} year bonus!)` : "";
+    toast.success(`+${result.totalScore.toLocaleString()} points!${yearBonus}`, {
       description: label,
       duration: 3000,
     });
-  }, [result.score, label]);
+  }, [result.totalScore, result.yearScore, label]);
 
   return (
     <motion.div
@@ -62,7 +63,7 @@ export function ResultReveal({
             transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
           >
             <div className={`text-4xl font-bold ${color}`}>
-              {result.score.toLocaleString()}
+              {result.totalScore.toLocaleString()}
             </div>
             <div className="text-sm text-muted-foreground mt-1">points</div>
           </motion.div>
@@ -71,12 +72,40 @@ export function ResultReveal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="mt-3"
+            className="mt-3 space-y-2"
           >
             <span className={`text-lg font-semibold ${color}`}>{label}</span>
-            <div className="text-sm text-muted-foreground mt-1">
-              {formatDistance(result.distance)} away
+
+            {/* Score breakdown */}
+            <div className="flex justify-center gap-4 text-sm">
+              <div className="flex items-center gap-1">
+                <MapPin className="h-3 w-3 text-lavender" />
+                <span className="text-muted-foreground">
+                  {result.score.toLocaleString()} pts
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  ({formatDistance(result.distance)})
+                </span>
+              </div>
+              {result.yearScore > 0 && (
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3 text-pistachio" />
+                  <span className="text-pistachio font-medium">
+                    +{result.yearScore} pts
+                  </span>
+                </div>
+              )}
             </div>
+
+            {/* Year guess feedback */}
+            {result.guess.year && result.song.year && (
+              <div className="text-xs text-muted-foreground">
+                You guessed {result.guess.year}, it was {result.song.year}
+                {result.guess.year === result.song.year && (
+                  <span className="text-pistachio font-medium"> - Perfect!</span>
+                )}
+              </div>
+            )}
           </motion.div>
         </div>
 

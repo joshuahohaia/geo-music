@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import type { GameState, GameAction, RoundResult } from "@/types/game";
-import { calculateDistance, calculateScore } from "@/lib/scoring";
+import { calculateDistance, calculateScore, calculateYearScore } from "@/lib/scoring";
 
 const initialState: GameState = {
   status: "idle",
@@ -54,19 +54,23 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         currentSong.longitude
       );
       const score = calculateScore(distance);
+      const yearScore = calculateYearScore(state.currentGuess.year, currentSong.year);
+      const totalScore = score + yearScore;
 
       const result: RoundResult = {
         song: currentSong,
         guess: state.currentGuess,
         distance,
         score,
+        yearScore,
+        totalScore,
       };
 
       return {
         ...state,
         status: "revealing",
         roundResults: [...state.roundResults, result],
-        totalScore: state.totalScore + score,
+        totalScore: state.totalScore + totalScore,
         currentGuess: null,
       };
     }

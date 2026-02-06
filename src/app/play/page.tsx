@@ -11,6 +11,7 @@ import { DynamicGameMap } from "@/components/game/map-wrapper";
 import { GuessButton } from "@/components/game/guess-button";
 import { ResultReveal } from "@/components/game/result-reveal";
 import { FinalSummary } from "@/components/game/final-summary";
+import { YearPicker } from "@/components/game/year-picker";
 import { SplitPane } from "@/components/layout/split-pane";
 
 function GameContent() {
@@ -26,6 +27,7 @@ function GameContent() {
     isLastRound,
     startGame,
     setGuess,
+    setYearGuess,
     submitGuess,
     nextRound,
     resetGame,
@@ -130,6 +132,14 @@ function GameContent() {
                 />
               </div>
             )}
+
+            {/* Year Picker */}
+            <YearPicker
+              value={currentGuess?.year}
+              onChange={setYearGuess}
+              disabled={isRevealing}
+              className="mt-4"
+            />
 
             {/* Mobile hint */}
             <div className="mt-4 text-center text-sm text-muted-foreground lg:hidden">

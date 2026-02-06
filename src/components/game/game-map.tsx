@@ -23,11 +23,6 @@ interface GameMapProps {
   resetKey?: number; // Used to reset map view between rounds
 }
 
-// World bounds to prevent infinite scrolling
-const WORLD_BOUNDS = new LatLngBounds(
-  [-85, -180], // Southwest corner
-  [85, 180]    // Northeast corner
-);
 
 // Custom marker icons
 const guessIcon = new Icon({
@@ -102,7 +97,7 @@ function MapReset({ resetKey }: { resetKey?: number }) {
 
   useEffect(() => {
     if (resetKey !== undefined) {
-      map.setView([20, 0], 2);
+      map.setView([20, 0], 3);
     }
   }, [map, resetKey]);
 
@@ -118,7 +113,7 @@ export function GameMap({
   resetKey,
 }: GameMapProps) {
   const defaultCenter: [number, number] = [20, 0];
-  const defaultZoom = 2;
+  const defaultZoom = 3;
 
   return (
     <MapContainer
@@ -127,14 +122,12 @@ export function GameMap({
       scrollWheelZoom={true}
       style={{ height: "100%", width: "100%" }}
       className="rounded-3xl overflow-hidden"
-      maxBounds={WORLD_BOUNDS}
-      maxBoundsViscosity={1.0}
-      minZoom={2}
+      minZoom={3}
+      worldCopyJump={true}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        noWrap={true}
       />
 
       <MapReset resetKey={resetKey} />
