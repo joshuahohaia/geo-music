@@ -21,7 +21,7 @@ export function ResultReveal({
   onNextRound,
   onFinish,
 }: ResultRevealProps) {
-  const { tier, color, label } = getScoreTier(result.score);
+  const { color, label } = getScoreTier(result.score);
 
   useEffect(() => {
     // Show toast notification for score
@@ -56,7 +56,7 @@ export function ResultReveal({
         </div>
 
         {/* Score Display */}
-        <div className="text-center py-4 border-y border-border">
+        <div className="text-center py-4 border-y border-navy/10">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}

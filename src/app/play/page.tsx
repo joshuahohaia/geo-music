@@ -144,8 +144,7 @@ function GameContent() {
               disabled={isRevealing}
               className="mt-2 sm:mt-3 md:mt-4"
             />
-
-                      </div>
+          </div>
         }
         rightPanel={
           <div className="relative h-full">

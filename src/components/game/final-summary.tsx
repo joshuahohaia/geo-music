@@ -25,14 +25,14 @@ export function FinalSummary({
   const percentage = Math.round((totalScore / maxPossibleScore) * 100);
 
   const getOverallTier = () => {
-    if (percentage >= 90) return { label: "Amazing!", emoji: "🏆" };
-    if (percentage >= 70) return { label: "Great job!", emoji: "🎉" };
-    if (percentage >= 50) return { label: "Good effort!", emoji: "👍" };
-    if (percentage >= 30) return { label: "Keep practicing!", emoji: "💪" };
-    return { label: "Better luck next time!", emoji: "🎵" };
+    if (percentage >= 90) return "World Music Expert!";
+    if (percentage >= 70) return "Great ear for global sounds!";
+    if (percentage >= 50) return "Solid performance!";
+    if (percentage >= 30) return "Keep exploring!";
+    return "The world awaits!";
   };
 
-  const { label: overallLabel, emoji } = getOverallTier();
+  const overallLabel = getOverallTier();
 
   return (
     <div className="min-h-screen bg-pearl flex items-center justify-center p-4">
@@ -53,13 +53,11 @@ export function FinalSummary({
               <Trophy className="h-10 w-10 text-navy" />
             </motion.div>
             <h1 className="text-3xl font-bold text-navy mb-2">Game Complete!</h1>
-            <p className="text-navy/70">
-              {emoji} {overallLabel}
-            </p>
+            <p className="text-navy/70">{overallLabel}</p>
           </div>
 
           {/* Score */}
-          <div className="p-8 text-center border-b border-border">
+          <div className="p-8 text-center border-b border-navy/10">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}

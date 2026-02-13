@@ -12,14 +12,14 @@ export function SplitPane({ leftPanel, rightPanel, className }: SplitPaneProps) 
   return (
     <div
       className={cn(
-        "flex flex-row h-[calc(100vh-4rem)] overflow-hidden",
+        "flex flex-row h-[calc(100vh-3.5rem)] overflow-hidden",
         className
       )}
     >
       {/* Left Panel - Audio/Controls (always on left, narrower on mobile) */}
       <div
         className={cn(
-          "flex-shrink-0 border-r border-border",
+          "flex-shrink-0 border-r border-navy/10",
           "h-full overflow-y-auto",
           "bg-pearl w-[140px] sm:w-[200px] md:w-[300px] lg:w-[400px]"
         )}

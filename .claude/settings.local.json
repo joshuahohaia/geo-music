@@ -9,7 +9,9 @@
       "Bash(python3:*)",
       "Bash(node scripts/fetch-deezer-urls.js:*)",
       "Bash(node scripts/refresh-previews.js:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Skill(frontend-design)",
+      "Bash(npm run build:*)"
     ]
   }
 }
