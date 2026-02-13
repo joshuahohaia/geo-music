@@ -14,6 +14,9 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 
+// Custom pin cursor as data URI
+const pinCursor = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='32' viewBox='0 0 24 32'%3E%3Cpath fill='%23E84855' stroke='%23fff' stroke-width='2' d='M12 1C6 1 1 6 1 12c0 8 11 18 11 18s11-10 11-18c0-6-5-11-11-11z'/%3E%3Ccircle fill='%23fff' cx='12' cy='12' r='4'/%3E%3C/svg%3E") 12 32, crosshair`;
+
 interface GameMapProps {
   onLocationSelect: (lat: number, lng: number) => void;
   selectedLocation: { lat: number; lng: number } | null;
@@ -120,10 +123,12 @@ export function GameMap({
       center={defaultCenter}
       zoom={defaultZoom}
       scrollWheelZoom={true}
-      style={{ height: "100%", width: "100%" }}
+      style={{ height: "100%", width: "100%", cursor: disabled ? "default" : pinCursor }}
       className="rounded-3xl overflow-hidden"
       minZoom={3}
       worldCopyJump={true}
+      maxBounds={[[-85, -1000], [85, 1000]]}
+      maxBoundsViscosity={1.0}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

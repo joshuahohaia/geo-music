@@ -12,23 +12,23 @@ export function SplitPane({ leftPanel, rightPanel, className }: SplitPaneProps) 
   return (
     <div
       className={cn(
-        "flex flex-col lg:flex-row h-[calc(100vh-4rem)] overflow-hidden",
+        "flex flex-row h-[calc(100vh-4rem)] overflow-hidden",
         className
       )}
     >
-      {/* Left Panel - Audio/Controls */}
+      {/* Left Panel - Audio/Controls (always on left, narrower on mobile) */}
       <div
         className={cn(
-          "flex-shrink-0 border-b lg:border-b-0 lg:border-r border-border",
-          "h-[45vh] lg:h-full overflow-y-auto",
-          "bg-pearl lg:w-[400px]"
+          "flex-shrink-0 border-r border-border",
+          "h-full overflow-y-auto",
+          "bg-pearl w-[140px] sm:w-[200px] md:w-[300px] lg:w-[400px]"
         )}
       >
-        <div className="p-4 lg:p-6 h-full flex flex-col">{leftPanel}</div>
+        <div className="p-2 sm:p-4 lg:p-6 h-full flex flex-col">{leftPanel}</div>
       </div>
 
       {/* Right Panel - Map */}
-      <div className="flex-1 h-[55vh] lg:h-full relative">{rightPanel}</div>
+      <div className="flex-1 h-full relative">{rightPanel}</div>
     </div>
   );
 }

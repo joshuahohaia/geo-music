@@ -26,10 +26,10 @@ export function GuessButton({ hasGuess, onSubmit, disabled }: GuessButtonProps) 
               size="lg"
               onClick={onSubmit}
               disabled={disabled}
-              className="px-8 py-6 text-lg font-bold rounded-full bg-pistachio hover:bg-pistachio/90 text-navy shadow-lg"
+              className="px-4 py-4 sm:px-8 sm:py-6 text-sm sm:text-lg font-bold rounded-full bg-pistachio hover:bg-pistachio/90 text-navy"
             >
-              <MapPin className="mr-2 h-5 w-5" />
-              SUBMIT GUESS
+              <MapPin className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden sm:inline">SUBMIT </span>GUESS
             </Button>
           </motion.div>
         </motion.div>

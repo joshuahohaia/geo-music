@@ -41,7 +41,7 @@ export function ResultReveal({
       <motion.div
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
-        className="bg-white rounded-3xl shadow-xl p-6 max-w-md mx-auto"
+        className="bg-white rounded-3xl p-6 max-w-md mx-auto"
       >
         {/* Song Info */}
         <div className="text-center mb-4">

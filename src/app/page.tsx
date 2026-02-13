@@ -17,7 +17,7 @@ export default function HomePage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="inline-flex items-center justify-center w-24 h-24 bg-lavender rounded-3xl mb-8 shadow-lg"
+            className="inline-flex items-center justify-center w-24 h-24 bg-lavender rounded-3xl mb-8"
           >
             <Music className="h-12 w-12 text-navy" />
           </motion.div>
@@ -55,7 +55,7 @@ export default function HomePage() {
               >
                 <Button
                   size="lg"
-                  className="px-12 py-7 text-xl font-bold rounded-full bg-pistachio hover:bg-pistachio/90 text-navy shadow-lg"
+                  className="px-12 py-7 text-xl font-bold rounded-full bg-pistachio hover:bg-pistachio/90 text-navy"
                 >
                   <Play className="mr-3 h-6 w-6" />
                   Start Game
@@ -102,7 +102,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 + index * 0.1 }}
               >
-                <Card className="p-6 text-center bg-white rounded-3xl border-0 shadow-sm hover:shadow-md transition-shadow">
+                <Card className="p-6 text-center bg-white rounded-3xl border-0">
                   <div
                     className={`inline-flex items-center justify-center w-16 h-16 ${step.color} rounded-2xl mb-4`}
                   >

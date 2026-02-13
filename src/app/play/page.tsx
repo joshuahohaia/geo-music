@@ -111,12 +111,12 @@ function GameContent() {
       <SplitPane
         leftPanel={
           <div className="flex flex-col h-full">
-            {/* Round Info */}
-            <div className="mb-4 text-center">
-              <h2 className="text-lg font-semibold text-navy">
+            {/* Round Info - hidden on very small screens */}
+            <div className="hidden sm:block mb-2 md:mb-4 text-center">
+              <h2 className="text-sm md:text-lg font-semibold text-navy">
                 Where is this music from?
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="hidden md:block text-sm text-muted-foreground">
                 Click on the map to place your guess
               </p>
             </div>
@@ -125,7 +125,11 @@ function GameContent() {
             {currentSong && (
               <div onClick={() => setHasInteracted(true)}>
                 <AudioPlayer
-                  src={currentSong.preview_url}
+                  src={
+                    currentSong.deezer_id
+                      ? `/api/preview?id=${currentSong.deezer_id}`
+                      : currentSong.preview_url
+                  }
                   coverUrl={currentSong.cover_url}
                   disabled={isRevealing}
                   autoPlay={hasInteracted && currentRound > 1}
@@ -138,20 +142,10 @@ function GameContent() {
               value={currentGuess?.year}
               onChange={setYearGuess}
               disabled={isRevealing}
-              className="mt-4"
+              className="mt-2 sm:mt-3 md:mt-4"
             />
 
-            {/* Mobile hint */}
-            <div className="mt-4 text-center text-sm text-muted-foreground lg:hidden">
-              {hasGuess ? (
-                <span className="text-pistachio font-medium">
-                  Scroll down to submit your guess!
-                </span>
-              ) : (
-                <span>Scroll down to see the map</span>
-              )}
-            </div>
-          </div>
+                      </div>
         }
         rightPanel={
           <div className="relative h-full">

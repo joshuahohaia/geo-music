@@ -41,59 +41,94 @@ export function useAudio(src: string, options: UseAudioOptions = {}) {
       error: null,
     });
 
-    const audio = new Audio(src);
-    audioRef.current = audio;
+    let cancelled = false;
 
-    const handleLoadedMetadata = () => {
-      setState((s) => ({
-        ...s,
-        duration: audio.duration,
-        isLoading: false,
-      }));
-    };
+    const loadAudio = async () => {
+      let audioUrl = src;
 
-    const handleTimeUpdate = () => {
-      setState((s) => ({ ...s, currentTime: audio.currentTime }));
-    };
-
-    const handleEnded = () => {
-      setState((s) => ({ ...s, isPlaying: false, currentTime: 0 }));
-    };
-
-    const handleError = () => {
-      setState((s) => ({
-        ...s,
-        isLoading: false,
-        error: "Failed to load audio",
-      }));
-    };
-
-    const handleCanPlay = () => {
-      setState((s) => ({ ...s, isLoading: false }));
-      // Autoplay when ready (only works after user interaction)
-      if (autoPlay) {
-        audio.play().then(() => {
-          setState((s) => ({ ...s, isPlaying: true }));
-        }).catch(() => {
-          // Autoplay blocked by browser, user needs to click
-        });
+      // If src is our API endpoint, fetch the actual URL first
+      if (src.startsWith("/api/preview")) {
+        try {
+          const response = await fetch(src);
+          if (!response.ok) {
+            throw new Error("Failed to fetch preview URL");
+          }
+          const data = await response.json();
+          if (data.error) {
+            throw new Error(data.error);
+          }
+          audioUrl = data.preview_url;
+        } catch (err) {
+          if (!cancelled) {
+            setState((s) => ({
+              ...s,
+              isLoading: false,
+              error: err instanceof Error ? err.message : "Failed to load audio",
+            }));
+          }
+          return;
+        }
       }
+
+      if (cancelled) return;
+
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      const handleLoadedMetadata = () => {
+        setState((s) => ({
+          ...s,
+          duration: audio.duration,
+          isLoading: false,
+        }));
+      };
+
+      const handleTimeUpdate = () => {
+        setState((s) => ({ ...s, currentTime: audio.currentTime }));
+      };
+
+      const handleEnded = () => {
+        setState((s) => ({ ...s, isPlaying: false, currentTime: 0 }));
+      };
+
+      const handleError = () => {
+        // Only set error if we haven't already loaded successfully
+        if (audio.readyState < 2) {
+          setState((s) => ({
+            ...s,
+            isLoading: false,
+            error: "Failed to load audio",
+          }));
+        }
+      };
+
+      const handleCanPlay = () => {
+        // Clear any error and mark as loaded
+        setState((s) => ({ ...s, isLoading: false, error: null }));
+        if (autoPlay) {
+          audio.play().then(() => {
+            setState((s) => ({ ...s, isPlaying: true }));
+          }).catch(() => {
+            // Autoplay blocked by browser
+          });
+        }
+      };
+
+      audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.addEventListener("timeupdate", handleTimeUpdate);
+      audio.addEventListener("ended", handleEnded);
+      audio.addEventListener("error", handleError);
+      audio.addEventListener("canplay", handleCanPlay);
     };
 
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError);
-    audio.addEventListener("canplay", handleCanPlay);
+    loadAudio();
 
     return () => {
-      audio.pause();
-      audio.src = "";
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError);
-      audio.removeEventListener("canplay", handleCanPlay);
+      cancelled = true;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
     };
   }, [src, autoPlay]);
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface YearPickerProps {
@@ -21,6 +22,12 @@ export function YearPicker({
   className,
 }: YearPickerProps) {
   const [inputValue, setInputValue] = useState(value?.toString() ?? "");
+  const isEmpty = inputValue === "";
+
+  // Reset input when value prop changes (e.g., new round)
+  useEffect(() => {
+    setInputValue(value?.toString() ?? "");
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -51,33 +58,41 @@ export function YearPicker({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "p-4 bg-white rounded-2xl shadow-sm",
+        "p-2 sm:p-3 md:p-4 bg-white rounded-xl lg:rounded-2xl",
+        // Subtle highlight when empty to draw attention
+        isEmpty && !disabled && "ring-2 ring-lavender/30",
         className
       )}
     >
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-medium text-navy">Guess the year</span>
-        <span className="text-sm text-muted-foreground">+1000 pts bonus</span>
+      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2 sm:mb-3">
+        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-lavender" />
+        <span className="text-xs sm:text-sm font-medium text-navy">Bonus: Guess Year</span>
       </div>
 
       <div className="flex justify-center">
-        <input
+        <motion.input
           type="number"
           inputMode="numeric"
-          placeholder="e.g. 1985"
+          placeholder="????"
           value={inputValue}
           onChange={handleChange}
           onBlur={handleBlur}
           disabled={disabled}
           min={MIN_YEAR}
           max={MAX_YEAR}
-          className="w-32 h-12 text-center text-2xl font-bold text-navy tabular-nums rounded-xl border-2 border-lavender/50 focus:border-lavender focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+          animate={isEmpty && !disabled ? {
+            borderColor: ["rgba(180, 188, 232, 0.5)", "rgba(180, 188, 232, 1)", "rgba(180, 188, 232, 0.5)"]
+          } : {}}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="w-full max-w-[120px] h-10 sm:h-12 text-center text-lg sm:text-2xl font-bold text-navy tabular-nums rounded-lg sm:rounded-xl border-2 border-lavender/50 focus:border-lavender focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
-      <p className="text-xs text-muted-foreground text-center mt-2">
-        {MIN_YEAR} - {MAX_YEAR}
-      </p>
+      {isEmpty && !disabled && (
+        <p className="text-[10px] sm:text-xs text-pistachio text-center mt-1 sm:mt-2 font-medium">
+          +1000 pts if correct!
+        </p>
+      )}
     </motion.div>
   );
 }
