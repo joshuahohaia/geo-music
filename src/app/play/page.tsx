@@ -35,6 +35,12 @@ function GameContent() {
 
   const [error, setError] = useState<string | null>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [yearGuess, setYearGuessLocal] = useState<number | undefined>(undefined);
+
+  // Reset year guess when round changes
+  useEffect(() => {
+    setYearGuessLocal(undefined);
+  }, [currentRound]);
 
   // Start game on mount
   useEffect(() => {
@@ -96,7 +102,22 @@ function GameContent() {
   }
 
   const isRevealing = status === "revealing";
-  const hasGuess = currentGuess !== null;
+  const hasLocationGuess = currentGuess !== null;
+  const hasYearGuess = yearGuess !== undefined;
+  const hasCompleteGuess = hasLocationGuess && hasYearGuess;
+
+  // Handle year change - update local state and sync to game state if location exists
+  const handleYearChange = (year: number) => {
+    setYearGuessLocal(year);
+    if (currentGuess) {
+      setYearGuess(year);
+    }
+  };
+
+  // Handle location change - include year if already entered
+  const handleLocationSelect = (lat: number, lng: number) => {
+    setGuess(lat, lng, yearGuess);
+  };
 
   return (
     <div className="h-screen flex flex-col bg-pearl">
@@ -110,20 +131,10 @@ function GameContent() {
       {/* Game Area */}
       <SplitPane
         leftPanel={
-          <div className="flex flex-col h-full">
-            {/* Round Info - hidden on very small screens */}
-            <div className="hidden sm:block mb-2 md:mb-4 text-center">
-              <h2 className="text-sm md:text-lg font-semibold text-navy">
-                Where is this music from?
-              </h2>
-              <p className="hidden md:block text-sm text-muted-foreground">
-                Click on the map to place your guess
-              </p>
-            </div>
-
+          <div className="flex flex-col h-full gap-2">
             {/* Audio Player */}
             {currentSong && (
-              <div onClick={() => setHasInteracted(true)}>
+              <div onClick={() => setHasInteracted(true)} className="flex-1 min-h-0">
                 <AudioPlayer
                   src={
                     currentSong.deezer_id
@@ -139,17 +150,17 @@ function GameContent() {
 
             {/* Year Picker */}
             <YearPicker
-              value={currentGuess?.year}
-              onChange={setYearGuess}
+              value={yearGuess}
+              onChange={handleYearChange}
               disabled={isRevealing}
-              className="mt-2 sm:mt-3 md:mt-4"
+              className="flex-shrink-0"
             />
           </div>
         }
         rightPanel={
           <div className="relative h-full">
             <DynamicGameMap
-              onLocationSelect={(lat, lng) => setGuess(lat, lng)}
+              onLocationSelect={handleLocationSelect}
               selectedLocation={
                 isRevealing && lastResult
                   ? { lat: lastResult.guess.latitude, lng: lastResult.guess.longitude }
@@ -173,9 +184,9 @@ function GameContent() {
             {/* Guess Button */}
             {!isRevealing && (
               <GuessButton
-                hasGuess={hasGuess}
+                hasGuess={hasCompleteGuess}
                 onSubmit={submitGuess}
-                disabled={!hasGuess}
+                disabled={!hasCompleteGuess}
               />
             )}
 

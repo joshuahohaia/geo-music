@@ -16,15 +16,15 @@ export function SplitPane({ leftPanel, rightPanel, className }: SplitPaneProps) 
         className
       )}
     >
-      {/* Left Panel - Audio/Controls (always on left, narrower on mobile) */}
+      {/* Left Panel - Audio/Controls (compact, scrollable if needed) */}
       <div
         className={cn(
           "flex-shrink-0 border-r border-navy/10",
           "h-full overflow-y-auto",
-          "bg-pearl w-[140px] sm:w-[200px] md:w-[300px] lg:w-[400px]"
+          "bg-pearl w-[120px] sm:w-[160px] md:w-[220px] lg:w-[280px]"
         )}
       >
-        <div className="p-2 sm:p-4 lg:p-6 h-full flex flex-col">{leftPanel}</div>
+        <div className="p-2 sm:p-3 md:p-4 h-full flex flex-col">{leftPanel}</div>
       </div>
 
       {/* Right Panel - Map */}

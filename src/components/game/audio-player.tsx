@@ -51,7 +51,7 @@ export function AudioPlayer({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "flex flex-col gap-3 p-2 sm:p-3 md:p-4 lg:p-6 bg-white rounded-2xl lg:rounded-3xl",
+        "flex flex-col gap-2 p-2 sm:p-3 bg-white rounded-xl lg:rounded-2xl",
         className
       )}
     >
@@ -59,7 +59,7 @@ export function AudioPlayer({
       {coverUrl && (
         <motion.div
           whileHover={{ scale: 1.02 }}
-          className="aspect-square w-full max-w-[280px] mx-auto rounded-xl lg:rounded-2xl overflow-hidden"
+          className="aspect-square w-full max-w-[180px] mx-auto rounded-lg lg:rounded-xl overflow-hidden"
         >
           <img
             src={coverUrl}
@@ -76,21 +76,21 @@ export function AudioPlayer({
             size="lg"
             onClick={toggle}
             disabled={disabled || isLoading || !!error}
-            className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full bg-lavender hover:bg-lavender/90 text-navy"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-lavender hover:bg-lavender/90 text-navy"
           >
             {isLoading ? (
-              <Loader2 className="h-6 w-6 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin" />
             ) : isPlaying ? (
-              <Pause className="h-6 w-6" />
+              <Pause className="h-5 w-5" />
             ) : (
-              <Play className="h-6 w-6 ml-0.5" />
+              <Play className="h-5 w-5 ml-0.5" />
             )}
           </Button>
         </motion.div>
       </div>
 
       {/* Progress/Seek Bar - hidden on very small screens */}
-      <div className="hidden sm:block space-y-1">
+      <div className="hidden sm:block space-y-0.5">
         <Slider
           value={[currentTime]}
           max={duration || 30}
@@ -99,7 +99,7 @@ export function AudioPlayer({
           disabled={disabled || isLoading}
           className="w-full"
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="flex justify-between text-[10px] text-muted-foreground">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration || 30)}</span>
         </div>
@@ -107,21 +107,21 @@ export function AudioPlayer({
 
       {/* Error Message */}
       {error && (
-        <p className="text-center text-xs sm:text-sm text-destructive">{error}</p>
+        <p className="text-center text-[10px] sm:text-xs text-destructive">{error}</p>
       )}
 
       {/* Volume Control - hidden on smaller screens */}
-      <div className="hidden lg:flex items-center gap-3">
+      <div className="hidden lg:flex items-center gap-2">
         <Button
           variant="ghost"
           size="icon"
           onClick={handleMuteToggle}
-          className="text-navy hover:bg-lavender/20"
+          className="h-8 w-8 text-navy hover:bg-lavender/20"
         >
           {isMuted || volume === 0 ? (
-            <VolumeX className="h-5 w-5" />
+            <VolumeX className="h-4 w-4" />
           ) : (
-            <Volume2 className="h-5 w-5" />
+            <Volume2 className="h-4 w-4" />
           )}
         </Button>
         <Slider
@@ -129,7 +129,7 @@ export function AudioPlayer({
           max={1}
           step={0.01}
           onValueChange={handleVolumeChange}
-          className="w-24"
+          className="w-20"
         />
       </div>
     </motion.div>
