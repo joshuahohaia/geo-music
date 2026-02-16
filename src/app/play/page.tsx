@@ -37,17 +37,12 @@ function GameContent() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [yearGuess, setYearGuessLocal] = useState<number | undefined>(undefined);
 
-  // Reset year guess when round changes
-  useEffect(() => {
-    setYearGuessLocal(undefined);
-  }, [currentRound]);
-
   // Start game on mount
   useEffect(() => {
     const initGame = async () => {
       try {
         await startGame();
-      } catch (err) {
+      } catch {
         setError("Failed to load songs. Please try again.");
       }
     };
@@ -153,7 +148,7 @@ function GameContent() {
               value={yearGuess}
               onChange={handleYearChange}
               disabled={isRevealing}
-              className="flex-shrink-0"
+              className="shrink-0"
             />
           </div>
         }
@@ -165,16 +160,16 @@ function GameContent() {
                 isRevealing && lastResult
                   ? { lat: lastResult.guess.latitude, lng: lastResult.guess.longitude }
                   : currentGuess
-                  ? { lat: currentGuess.latitude, lng: currentGuess.longitude }
-                  : null
+                    ? { lat: currentGuess.latitude, lng: currentGuess.longitude }
+                    : null
               }
               revealMode={isRevealing}
               actualLocation={
                 isRevealing && lastResult
                   ? {
-                      lat: lastResult.song.latitude,
-                      lng: lastResult.song.longitude,
-                    }
+                    lat: lastResult.song.latitude,
+                    lng: lastResult.song.longitude,
+                  }
                   : undefined
               }
               disabled={isRevealing}

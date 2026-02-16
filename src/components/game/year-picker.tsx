@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,12 +23,7 @@ export function YearPicker({
 }: YearPickerProps) {
   const [inputValue, setInputValue] = useState(value?.toString() ?? "");
   const isEmpty = inputValue === "";
-  const isValid = !isEmpty && parseInt(inputValue, 10) >= MIN_YEAR && parseInt(inputValue, 10) <= MAX_YEAR;
-
-  // Reset input when value prop changes (e.g., new round)
-  useEffect(() => {
-    setInputValue(value?.toString() ?? "");
-  }, [value]);
+  const isValid = !isEmpty && parseInt(inputValue, 10) >= MIN_YEAR && parseInt(inputValue, 10) <= MAX_YEAR;;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -71,7 +66,7 @@ export function YearPicker({
         ) : (
           <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-peach" />
         )}
-        <span className="text-[10px] sm:text-xs font-medium text-navy">
+        <span className="text-[10px] sm:text-xs font-medium text-navy mb-1.5">
           {isValid ? "Year entered" : "Release year"}
         </span>
       </div>
@@ -92,7 +87,7 @@ export function YearPicker({
           } : {}}
           transition={{ duration: 2, repeat: Infinity }}
           className={cn(
-            "w-full max-w-[100px] h-10 sm:h-11 text-center text-lg sm:text-xl font-bold text-navy tabular-nums rounded-lg border-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed",
+            "w-full max-w-25 h-10 sm:h-11 text-center text-lg sm:text-xl font-bold text-navy tabular-nums rounded-lg border-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed",
             isValid ? "border-pistachio/50 focus:border-pistachio" : "border-peach/50 focus:border-peach"
           )}
         />

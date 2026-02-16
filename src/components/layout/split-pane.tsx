@@ -19,9 +19,9 @@ export function SplitPane({ leftPanel, rightPanel, className }: SplitPaneProps) 
       {/* Left Panel - Audio/Controls (compact, scrollable if needed) */}
       <div
         className={cn(
-          "flex-shrink-0 border-r border-navy/10",
+          "shrink-0 ",
           "h-full overflow-y-auto",
-          "bg-pearl w-[120px] sm:w-[160px] md:w-[220px] lg:w-[280px]"
+          "bg-pearl w-30 sm:w-40 md:w-55 lg:w-70"
         )}
       >
         <div className="p-2 sm:p-3 md:p-4 h-full flex flex-col">{leftPanel}</div>

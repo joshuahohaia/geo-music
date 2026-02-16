@@ -124,7 +124,7 @@ export function GameMap({
       zoom={defaultZoom}
       scrollWheelZoom={true}
       style={{ height: "100%", width: "100%", cursor: disabled ? "default" : pinCursor }}
-      className="rounded-3xl overflow-hidden"
+      className="rounded-l-3xl overflow-hidden"
       minZoom={3}
       worldCopyJump={true}
       maxBounds={[[-85, -1000], [85, 1000]]}
