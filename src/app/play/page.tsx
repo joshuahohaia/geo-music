@@ -126,10 +126,10 @@ function GameContent() {
       {/* Game Area */}
       <SplitPane
         leftPanel={
-          <div className="flex flex-col h-full gap-2">
+          <div className="flex flex-col justify-center flex-1 gap-4">
             {/* Audio Player */}
             {currentSong && (
-              <div onClick={() => setHasInteracted(true)} className="flex-1 min-h-0">
+              <div onClick={() => setHasInteracted(true)}>
                 <AudioPlayer
                   src={
                     currentSong.deezer_id
@@ -148,7 +148,6 @@ function GameContent() {
               value={yearGuess}
               onChange={handleYearChange}
               disabled={isRevealing}
-              className="shrink-0"
             />
           </div>
         }

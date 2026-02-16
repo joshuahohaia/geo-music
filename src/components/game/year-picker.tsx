@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Slider } from "@/components/ui/slider";
 
 interface YearPickerProps {
   value?: number;
@@ -21,32 +21,11 @@ export function YearPicker({
   disabled,
   className,
 }: YearPickerProps) {
-  const [inputValue, setInputValue] = useState(value?.toString() ?? "");
-  const isEmpty = inputValue === "";
-  const isValid = !isEmpty && parseInt(inputValue, 10) >= MIN_YEAR && parseInt(inputValue, 10) <= MAX_YEAR;;
+  const isValid = value !== undefined;
+  const displayYear = value ?? Math.round((MIN_YEAR + MAX_YEAR) / 2);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-
-    // Allow empty or partial input while typing
-    if (val === "" || /^\d{0,4}$/.test(val)) {
-      setInputValue(val);
-
-      const year = parseInt(val, 10);
-      if (!isNaN(year) && year >= MIN_YEAR && year <= MAX_YEAR) {
-        onChange(year);
-      }
-    }
-  };
-
-  const handleBlur = () => {
-    const year = parseInt(inputValue, 10);
-    if (isNaN(year) || year < MIN_YEAR) {
-      setInputValue("");
-    } else if (year > MAX_YEAR) {
-      setInputValue(MAX_YEAR.toString());
-      onChange(MAX_YEAR);
-    }
+  const handleValueChange = (values: number[]) => {
+    onChange(values[0]);
   };
 
   return (
@@ -55,7 +34,7 @@ export function YearPicker({
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "p-2 sm:p-3 bg-white rounded-xl",
-        isEmpty && !disabled && "ring-2 ring-peach/50",
+        !isValid && !disabled && "ring-2 ring-peach/50",
         isValid && !disabled && "ring-2 ring-pistachio/50",
         className
       )}
@@ -66,36 +45,29 @@ export function YearPicker({
         ) : (
           <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-peach" />
         )}
-        <span className="text-[10px] sm:text-xs font-medium text-navy mb-1.5">
-          {isValid ? "Year entered" : "Release year"}
+        <span className="text-[10px] sm:text-xs font-medium text-navy">
+          {isValid ? "Year selected" : "Guess the release year"}
         </span>
       </div>
 
-      <div className="flex justify-center">
-        <motion.input
-          type="number"
-          inputMode="numeric"
-          placeholder="1990"
-          value={inputValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          disabled={disabled}
+      <div className="flex items-center justify-center gap-4 px-2">
+        <Slider
+          value={[displayYear]}
+          onValueChange={handleValueChange}
           min={MIN_YEAR}
           max={MAX_YEAR}
-          animate={isEmpty && !disabled ? {
-            borderColor: ["rgba(255, 214, 186, 0.5)", "rgba(255, 214, 186, 1)", "rgba(255, 214, 186, 0.5)"]
-          } : {}}
-          transition={{ duration: 2, repeat: Infinity }}
-          className={cn(
-            "w-full max-w-25 h-10 sm:h-11 text-center text-lg sm:text-xl font-bold text-navy tabular-nums rounded-lg border-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed",
-            isValid ? "border-pistachio/50 focus:border-pistachio" : "border-peach/50 focus:border-peach"
-          )}
+          step={1}
+          disabled={disabled}
+          className="w-full"
         />
+        <div className="text-lg sm:text-xl font-bold text-navy tabular-nums w-16 text-center">
+          {displayYear}
+        </div>
       </div>
 
-      {isEmpty && !disabled && (
+      {!isValid && !disabled && (
         <p className="text-[9px] sm:text-[10px] text-peach text-center mt-1 font-medium">
-          Required
+          Slide to select a year
         </p>
       )}
       {isValid && !disabled && (

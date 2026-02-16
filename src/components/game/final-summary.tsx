@@ -41,9 +41,9 @@ export function FinalSummary({
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-2xl"
       >
-        <Card className="bg-white rounded-3xl overflow-hidden">
+        <Card>
           {/* Header */}
-          <div className="bg-lavender p-8 text-center">
+          <div className="bg-lavender p-4 text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
