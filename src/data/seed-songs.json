@@ -432,22 +432,6 @@
     "difficulty": 2
   },
   {
-    "id": "28",
-    "title": "Chan Chan",
-    "artist": "Buena Vista Social Club",
-    "album": "Buena Vista Social Club",
-    "year": 1997,
-    "genre": "Son Cubano",
-    "deezer_id": "1459357802",
-    "preview_url": "https://cdnt-preview.dzcdn.net/api/1/1/b/8/2/0/b82781498763a16e2ac9fd581def0942.mp3?hdnea=exp=1770373873~acl=/api/1/1/b/8/2/0/b82781498763a16e2ac9fd581def0942.mp3*~data=user_id=0,application_id=42~hmac=c746f4b864c3b8f1841e224511b15f05735213880e5ef4e5a8c156af556f49a4",
-    "cover_url": "https://cdn-images.dzcdn.net/images/cover/e74bddbc8d4e47d308fb6defd5094220/250x250-000000-80-0-0.jpg",
-    "latitude": 23.1136,
-    "longitude": -82.3666,
-    "location_name": "Havana, Cuba",
-    "country": "Cuba",
-    "difficulty": 1
-  },
-  {
     "id": "29",
     "title": "Sastanàqqàm",
     "artist": "Tinariwen",

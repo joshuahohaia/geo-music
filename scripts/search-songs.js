@@ -8,7 +8,6 @@ const searches = [
   // Multi-language songs from around the world
   { query: "Khruangbin Maria También", artist: "Khruangbin", location: "Houston, Texas" },
   { query: "Fela Kuti Zombie", artist: "Fela Kuti", location: "Lagos, Nigeria" },
-  { query: "Buena Vista Social Club Chan Chan", artist: "Buena Vista Social Club", location: "Havana, Cuba" },
   { query: "Tinariwen Sastanàqqàm", artist: "Tinariwen", location: "Kidal, Mali" },
   { query: "Sigur Rós Hoppípolla", artist: "Sigur Rós", location: "Reykjavik, Iceland" },
   { query: "Gipsy Kings Bamboleo", artist: "Gipsy Kings", location: "Arles, France" },
