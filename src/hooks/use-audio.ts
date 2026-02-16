@@ -44,42 +44,15 @@ export function useAudio(src: string, options: UseAudioOptions = {}) {
     let cancelled = false;
 
     const loadAudio = async () => {
-      let audioUrl = src;
-
-      // If src is our API endpoint, fetch the actual URL first
-      if (src.startsWith("/api/preview")) {
-        try {
-          const response = await fetch(src);
-          if (!response.ok) {
-            throw new Error("Failed to fetch preview URL");
-          }
-          const data = await response.json();
-          if (data.error) {
-            throw new Error(data.error);
-          }
-          audioUrl = data.preview_url;
-        } catch (err) {
-          if (!cancelled) {
-            setState((s) => ({
-              ...s,
-              isLoading: false,
-              error: err instanceof Error ? err.message : "Failed to load audio",
-            }));
-          }
-          return;
-        }
-      }
-
       if (cancelled) return;
 
-      const audio = new Audio(audioUrl);
+      const audio = new Audio(src);
       audioRef.current = audio;
 
       const handleLoadedMetadata = () => {
         setState((s) => ({
           ...s,
           duration: audio.duration,
-          isLoading: false,
         }));
       };
 
@@ -92,11 +65,12 @@ export function useAudio(src: string, options: UseAudioOptions = {}) {
       };
 
       const handleError = () => {
-        // Only set error if we haven't already loaded successfully
-        if (audio.readyState < 2) {
+        // This event can fire for transient reasons. We'll set the error state,
+        // but keep isLoading=true. If 'canplay' fires, the error will be cleared.
+        // This prevents a brief flash of an error message on a recoverable issue.
+        if (audioRef.current && audioRef.current.readyState < 2) {
           setState((s) => ({
             ...s,
-            isLoading: false,
             error: "Failed to load audio",
           }));
         }

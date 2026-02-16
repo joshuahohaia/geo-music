@@ -105,8 +105,8 @@ export function AudioPlayer({
         </div>
       </div>
 
-      {/* Error Message */}
-      {error && (
+      {/* Error Message - only show after loading completes to avoid transient flashes */}
+      {error && !isLoading && (
         <p className="text-center text-[10px] sm:text-xs text-destructive">{error}</p>
       )}
 
