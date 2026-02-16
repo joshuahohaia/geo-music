@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,9 +24,44 @@ export function YearPicker({
 }: YearPickerProps) {
   const isValid = value !== undefined;
   const displayYear = value ?? Math.round((MIN_YEAR + MAX_YEAR) / 2);
+  const [inputValue, setInputValue] = useState(String(displayYear));
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleValueChange = (values: number[]) => {
     onChange(values[0]);
+    setInputValue(String(values[0]));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const commitInputValue = () => {
+    const parsed = parseInt(inputValue, 10);
+    if (!isNaN(parsed)) {
+      const clamped = Math.min(MAX_YEAR, Math.max(MIN_YEAR, parsed));
+      onChange(clamped);
+      setInputValue(String(clamped));
+    } else {
+      setInputValue(String(displayYear));
+    }
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      commitInputValue();
+      (e.target as HTMLInputElement).blur();
+    } else if (e.key === "Escape") {
+      setInputValue(String(displayYear));
+      setIsEditing(false);
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
+  const handleFocus = () => {
+    setIsEditing(true);
+    setInputValue(String(displayYear));
   };
 
   return (
@@ -34,8 +70,6 @@ export function YearPicker({
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "p-2 sm:p-3 bg-white rounded-xl",
-        !isValid && !disabled && "ring-2 ring-peach/50",
-        isValid && !disabled && "ring-2 ring-pistachio/50",
         className
       )}
     >
@@ -60,9 +94,17 @@ export function YearPicker({
           disabled={disabled}
           className="w-full"
         />
-        <div className="text-lg sm:text-xl font-bold text-navy tabular-nums w-16 text-center">
-          {displayYear}
-        </div>
+        <input
+          type="text"
+          inputMode="numeric"
+          value={isEditing ? inputValue : displayYear}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          onBlur={commitInputValue}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          className="text-lg sm:text-xl font-bold text-navy tabular-nums w-16 text-center bg-transparent border-b-2 border-transparent focus:border-lavender focus:outline-none"
+        />
       </div>
 
       {!isValid && !disabled && (
