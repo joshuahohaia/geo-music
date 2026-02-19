@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import seedSongs from "@/data/seed-songs.json";
+import type { Song } from "@/types/game";
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {
@@ -9,23 +10,6 @@ function shuffleArray<T>(array: T[]): T[] {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
-}
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  album?: string;
-  year?: number;
-  genre?: string;
-  deezer_id?: string;
-  preview_url: string;
-  cover_url?: string;
-  latitude: number;
-  longitude: number;
-  location_name?: string;
-  country?: string;
-  difficulty?: number;
 }
 
 export async function GET(request: Request) {

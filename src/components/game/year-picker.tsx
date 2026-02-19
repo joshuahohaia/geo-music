@@ -84,7 +84,20 @@ export function YearPicker({
         </span>
       </div>
 
-      <div className="flex items-center justify-center gap-4 px-2">
+      <div className="flex flex-col gap-2 px-1">
+        <div className="flex items-center justify-center">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={isEditing ? inputValue : displayYear}
+            onChange={handleInputChange}
+            onFocus={handleFocus}
+            onBlur={commitInputValue}
+            onKeyDown={handleKeyDown}
+            disabled={disabled}
+            className="text-xl sm:text-2xl font-bold text-navy tabular-nums w-20 text-center bg-transparent border-b-2 border-transparent focus:border-lavender focus:outline-none"
+          />
+        </div>
         <Slider
           value={[displayYear]}
           onValueChange={handleValueChange}
@@ -93,17 +106,6 @@ export function YearPicker({
           step={1}
           disabled={disabled}
           className="w-full"
-        />
-        <input
-          type="text"
-          inputMode="numeric"
-          value={isEditing ? inputValue : displayYear}
-          onChange={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={commitInputValue}
-          onKeyDown={handleKeyDown}
-          disabled={disabled}
-          className="text-lg sm:text-xl font-bold text-navy tabular-nums w-16 text-center bg-transparent border-b-2 border-transparent focus:border-lavender focus:outline-none"
         />
       </div>
 
