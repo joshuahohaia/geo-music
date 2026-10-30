@@ -13,6 +13,7 @@ import { ResultReveal } from "@/components/game/result-reveal";
 import { FinalSummary } from "@/components/game/final-summary";
 import { YearPicker } from "@/components/game/year-picker";
 import { SplitPane } from "@/components/layout/split-pane";
+import { resolveGameView } from "./view-state";
 
 function GameContent() {
   const {
@@ -49,8 +50,10 @@ function GameContent() {
     initGame();
   }, [startGame]);
 
+  const view = resolveGameView(status, error);
+
   // Handle loading state
-  if (status === "idle" || status === "loading") {
+  if (view === "loading") {
     return (
       <div className="min-h-screen bg-pearl flex items-center justify-center">
         <motion.div
@@ -66,7 +69,7 @@ function GameContent() {
   }
 
   // Handle error state
-  if (error) {
+  if (view === "error") {
     return (
       <div className="min-h-screen bg-pearl flex items-center justify-center">
         <div className="text-center">
@@ -83,7 +86,7 @@ function GameContent() {
   }
 
   // Handle finished state
-  if (status === "finished") {
+  if (view === "finished") {
     return (
       <FinalSummary
         results={roundResults}
