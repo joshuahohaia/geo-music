@@ -65,12 +65,14 @@ export function useAudio(src: string, options: UseAudioOptions = {}) {
       };
 
       const handleError = () => {
-        // This event can fire for transient reasons. We'll set the error state,
-        // but keep isLoading=true. If 'canplay' fires, the error will be cleared.
-        // This prevents a brief flash of an error message on a recoverable issue.
+        // This event can fire for transient reasons, so 'canplay' still clears
+        // the error if the resource recovers. But isLoading must be set to
+        // false here: if 'canplay' never fires, keeping isLoading=true leaves
+        // an endless spinner and hides the error from the UI entirely.
         if (audioRef.current && audioRef.current.readyState < 2) {
           setState((s) => ({
             ...s,
+            isLoading: false,
             error: "Failed to load audio",
           }));
         }
